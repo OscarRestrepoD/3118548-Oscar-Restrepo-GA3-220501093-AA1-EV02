@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidencia: Taller de Algoritmos - GA3-220501093-AA1-EV02</title>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --sidebar-bg: #3c3f41;
+            --sidebar-text: #a9b7c6;
+            --sidebar-hover: #4b6eaf;
+            --window-bg: #fff;
+            --window-border: #d1d1d1;
+            --title-bar-bg: #e7e7e7;
+            --title-bar-text: #333;
+            --code-bg: #2b2b2b;
+            --code-text: #a9b7c6;
+            --enunciado-bg: #e9f5ff;
+            --enunciado-border: #007bff;
+            --paper-bg: #ffffff;
+            --text-color: #333;
+            --header-color: #2c3e50;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        .document-container {
+            max-width: 960px;
+            margin: 20px auto;
+            background-color: var(--paper-bg);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        #cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 40px;
+            min-height: 50vh;
+            border-bottom: 1px solid var(--window-border);
+        }
+        #cover-page h1 {
+            font-size: 2.2em;
+            color: var(--header-color);
+            margin: 0 0 15px 0;
+        }
+        #cover-page h2 {
+            font-size: 1.5em;
+            font-weight: 400;
+            color: var(--header-color);
+            margin: 20px 0;
+        }
+        #cover-page p {
+            font-size: 1.1em;
+            margin: 5px 0;
+        }
+        .content-section {
+            padding: 40px;
+            border-bottom: 1px solid var(--window-border);
+        }
+        .content-section h2 {
+             font-size: 1.8em;
+             color: var(--header-color);
+             border-bottom: 2px solid var(--enunciado-border);
+             padding-bottom: 10px;
+             margin-bottom: 20px;
+        }
+        .content-section p {
+            font-size: 1.1em;
+            line-height: 1.7;
+            text-align: justify;
+        }
+        .main-wrapper {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+            border-bottom: 1px solid var(--window-border);
+        }
+        #sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        #sidebar h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.2em;
+            text-align: center;
+            color: #d4d4d4;
+            border-bottom: 1px solid #555;
+            padding-bottom: 10px;
+        }
+        #sidebar ul { list-style: none; padding: 0; margin: 0; }
+        #sidebar li { padding: 12px 15px; cursor: pointer; border-radius: 4px; margin-bottom: 5px; transition: background-color 0.2s; }
+        #sidebar li:hover { background-color: #555; }
+        #sidebar li.active { background-color: var(--sidebar-hover); color: #fff; font-weight: bold; }
+        #main-content {
+            flex-grow: 1;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto auto auto;
+            gap: 20px;
+            overflow: auto;
+            background-color: #f9f9f9;
+        }
+        #enunciado-window {
+            grid-column: 1 / -1; grid-row: 1 / 2; background-color: var(--enunciado-bg); border: 1px solid #bce8f1;
+            border-left: 5px solid var(--enunciado-border); padding: 15px; border-radius: 5px;
+        }
+        #enunciado-window h3 { margin-top: 0; color: #31708f; }
+        .window {
+            background-color: var(--window-bg); border: 1px solid var(--window-border); border-radius: 5px;
+            display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 250px;
+        }
+        .title-bar {
+            background-color: var(--title-bar-bg); padding: 8px 12px; font-weight: bold; color: var(--title-bar-text);
+            border-bottom: 1px solid var(--window-border); border-top-left-radius: 4px; border-top-right-radius: 4px;
+        }
+        .content { padding: 15px; flex-grow: 1; overflow: auto; font-size: 14px; line-height: 1.6; }
+        .content ul { padding-left: 20px; }
+        .content li { margin-bottom: 10px; }
+        .content strong { color: #0056b3; }
+        #pseudocode-window { grid-row: 2 / 3; grid-column: 1 / 2; }
+        #diagram-window { grid-row: 2 / 3; grid-column: 2 / 3; }
+        #execution-window { grid-column: 1 / -1; grid-row: 3 / 4; }
+        #analysis-window { grid-row: 4 / 5; grid-column: 1 / 2; }
+        #result-window { grid-row: 4 / 5; grid-column: 2 / 3; }
+        pre {
+            margin: 0; background-color: var(--code-bg); color: var(--code-text); padding: 15px; border-radius: 4px;
+            height: 100%; box-sizing: border-box; overflow: auto; font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap; word-wrap: break-word;
+        }
+        .diagram-container {
+            display: flex; justify-content: center; align-items: center;
+            height: 100%; padding: 5px; box-sizing: border-box;
+        }
+        .diagram-container img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; }
+        footer {
+            background-color: var(--sidebar-bg); color: var(--sidebar-text); text-align: center;
+            padding: 15px; font-size: 0.9em; flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .document-container {
+                margin: 0;
+                border-radius: 0;
+            }
+            .main-wrapper { flex-direction: column; }
+            #sidebar { width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 5px; }
+            #sidebar h3 { display: none; }
+            #sidebar ul { display: flex; flex-direction: row; }
+            #sidebar li { white-space: nowrap; margin-right: 10px; }
+            #main-content { grid-template-columns: 1fr; grid-template-rows: auto; }
+            #pseudocode-window, #diagram-window, #analysis-window, #result-window, #execution-window, #enunciado-window { grid-column: 1 / -1; }
+             #cover-page {
+                padding: 40px 20px;
+                min-height: auto;
+            }
+            .content-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="document-container">
+
+        <!-- Portada -->
+        <div id="cover-page">
+            <h1>Evidencia GA3-220501093-AA1-EV02</h1>
+            <h2>Taller de Resolución de Problemas de Algoritmos</h2>
+            <p>Presentado por:</p>
+            <p><strong>Oscar Eduardo Restrepo David</strong></p>
+            <br><br>
+            <p>ANÁLISIS Y DESARROLLO DE SOFTWARE</p>
+            <p>(Ficha: 3118548)</p>
+            <br><br>
+            <p>CENTRO AGROEMPRESARIAL Y TURÍSTICO DE LOS ANDES</p>
+            <p>SENA - 2024</p>
+        </div>
+
+        <!-- Introducción -->
+        <div class="content-section" id="introduction">
+            <h2>Introducción</h2>
+            <p>
+                El presente documento detalla la resolución de la evidencia GA3-220501093-AA1-EV02, correspondiente al taller sobre resolución de problemas algorítmicos. A través de una interfaz interactiva, se desglosan cuatro problemas cotidianos, aplicando un análisis estructurado para identificar entradas y salidas. Cada problema se acompaña de su respectiva solución en pseudocódigo y su representación visual mediante un diagrama de flujo, demostrando así la aplicación práctica de los fundamentos de la algoritmia para la planificación de soluciones lógicas y ordenadas.
+            </p>
+        </div>
+
+        <!-- Contenido Interactivo Original -->
+        <div class="main-wrapper">
+            <div id="sidebar">
+                <h3>Análisis de Problemas</h3>
+                <ul id="exercise-list"></ul>
+            </div>
+            <div id="main-content">
+                <div id="enunciado-window">
+                    <h3 id="main-title">Seleccione un problema</h3>
+                    <p id="enunciado-text"></p>
+                </div>
+                <div id="pseudocode-window" class="window"><div class="title-bar">Pseudocódigo</div><div class="content" id="pseudocode-content"></div></div>
+                <div id="diagram-window" class="window"><div class="title-bar">Diagrama de Flujo</div><div class="content" id="diagram-content"></div></div>
+                <div id="execution-window" class="window"><div class="title-bar">Ejecución</div><div class="content" id="execution-content"></div></div>
+                <div id="analysis-window" class="window"><div class="title-bar">Análisis: Entradas y Salidas</div><div class="content" id="analysis-content"></div></div>
+                <div id="result-window" class="window"><div class="title-bar">Resultados Esperados (Ejemplo)</div><div class="content" id="result-content"></div></div>
+            </div>
+        </div>
+        <footer>
+            Análisis de problemas basado en los ejercicios de la Sección 1.
+        </footer>
+        
+        <!-- Conclusión -->
+        <div class="content-section" id="conclusion">
+            <h2>Conclusión</h2>
+            <p>
+                La realización de este taller ha permitido consolidar la importancia fundamental del análisis algorítmico como pilar en el desarrollo de software. La metodología de descomponer problemas, identificar datos de entrada y resultados esperados, y posteriormente plasmarlos en pseudocódigo y diagramas de flujo, resulta crucial para crear soluciones claras, eficientes y libres de ambigüedad. Herramientas como PSeInt y los diagramas de flujo no solo facilitan la visualización de la lógica, sino que también actúan como un puente indispensable entre el planteamiento de un problema y su codificación final, garantizando una mayor calidad y mantenibilidad del software.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const exercises = [
+            { id: 1, title: "Conversión de Pesos a Dólares", enunciado: "Se desea elaborar un algoritmo que permita identificar la cantidad de dólares equivalentes a una cantidad de pesos colombianos.", pseudocode: `Algoritmo Convertir_COP_a_USD\n    Definir pesos_colombianos, tasa_cambio, dolares_americanos Como Real\n\n    Escribir "Ingrese la cantidad en Pesos Colombianos:"\n    Leer pesos_colombianos\n\n    Escribir "Ingrese la tasa de cambio (COP por 1 USD):"\n    Leer tasa_cambio\n\n    dolares_americanos <- pesos_colombianos / tasa_cambio\n\n    Escribir "La cantidad equivalente es:", dolares_americanos, " USD"\nFinAlgoritmo`, diagram: `<div class="diagram-container"><img src="https://i.imgur.com/EsHgdEu.png" alt="Diagrama de flujo para conversión de pesos a dólares"></div>`, execution: `*** Ejecución Iniciada ***\nIngrese la cantidad en Pesos Colombianos:\n> 200000\nIngrese la tasa de cambio (COP por 1 USD):\n> 4000\nLa cantidad equivalente es: 50 USD\n*** Ejecución Finalizada ***`, analysis: `<ul><li><strong>Entradas:</strong><ul><li>Cantidad de pesos colombianos (COP).</li><li>Tasa de cambio actual (valor de 1 dólar en pesos).</li></ul></li><li><strong>Salidas (Resultados):</strong><ul><li>Cantidad equivalente en dólares (USD).</li></ul></li></ul>`, result: `<ul><li>Si se ingresan <strong>$200,000 COP</strong> y la tasa de cambio es <strong>$4,000 COP por dólar</strong>...</li><li>El resultado esperado es: <strong>50 dólares</strong>.</li></ul>` },
+            { id: 2, title: "Conversión de Fahrenheit a Centígrados", enunciado: "Se desea elaborar un algoritmo que permita determinar la temperatura equivalente en grados centígrados a la cantidad de grados Fahrenheit actuales en la ciudad de New York.", pseudocode: `Algoritmo Convertir_F_a_C\n    Definir grados_fahrenheit, grados_centigrados Como Real\n\n    Escribir "Ingrese la temperatura en Grados Fahrenheit:"\n    Leer grados_fahrenheit\n\n    grados_centigrados <- (grados_fahrenheit - 32) * 5 / 9\n\n    Escribir "La temperatura equivalente es:", grados_centigrados, " °C"\nFinAlgoritmo`, diagram: `<div class="diagram-container"><img src="https://i.imgur.com/B41qD4w.png" alt="Diagrama de flujo para conversión de Fahrenheit a Centígrados"></div>`, execution: `*** Ejecución Iniciada ***\nIngrese la temperatura en Grados Fahrenheit:\n> 68\nLa temperatura equivalente es: 20 °C\n*** Ejecución Finalizada ***`, analysis: `<ul><li><strong>Entradas:</strong><ul><li>Temperatura en grados Fahrenheit (°F).</li></ul></li><li><strong>Salidas (Resultados):</strong><ul><li>Temperatura equivalente en grados Centígrados (°C).</li></ul></li></ul>`, result: `<ul><li>Si la temperatura en New York es de <strong>68°F</strong>...</li><li>Aplicando la fórmula C = (F - 32) * 5/9, el resultado esperado es: <strong>20°C</strong>.</li></ul>` },
+            { id: 3, title: "Plan para llegar al trabajo", enunciado: "Suponiendo que nos encontramos descansando en una nuestra casa en una ciudad de Colombia requiero hacer un plan detallado para llegar a tiempo a mi sitio de trabajo el día siguiente.", pseudocode: `Algoritmo CalcularHoraDespertar\n    Definir hora_entrada, minuto_entrada, tiempo_transporte, tiempo_arreglo, tiempo_desayuno, tiempo_imprevistos, tiempo_total_preparacion, minutos_totales_entrada, minutos_totales_despertar, hora_despertar, minuto_despertar Como Entero\n\n    Escribir "Hora de entrada (formato 24h):"; Leer hora_entrada\n    Escribir "Minuto de entrada:"; Leer minuto_entrada\n    Escribir "Tiempo de transporte (min):"; Leer tiempo_transporte\n    Escribir "Tiempo de arreglo personal (min):"; Leer tiempo_arreglo\n    Escribir "Tiempo de desayuno (min):"; Leer tiempo_desayuno\n    Escribir "Tiempo para imprevistos (min):"; Leer tiempo_imprevistos\n\n    tiempo_total_preparacion <- tiempo_transporte + tiempo_arreglo + tiempo_desayuno + tiempo_imprevistos\n    minutos_totales_entrada <- hora_entrada * 60 + minuto_entrada\n    minutos_totales_despertar <- minutos_totales_entrada - tiempo_total_preparacion\n\n    hora_despertar <- trunc(minutos_totales_despertar / 60)\n    minuto_despertar <- minutos_totales_despertar % 60\n\n    Escribir "Debe despertar a las: ", hora_despertar, ":", minuto_despertar\nFinAlgoritmo`, diagram: `<div class="diagram-container"><img src="https://i.imgur.com/AOZ4UXI.png" alt="Diagrama de flujo para planificar llegada al trabajo"></div>`, execution: `*** Ejecución Iniciada ***\nHora de entrada (formato 24h):\n> 8\nMinuto de entrada:\n> 0\nTiempo de transporte (min):\n> 45\nTiempo de arreglo personal (min):\n> 20\nTiempo de desayuno (min):\n> 15\nTiempo para imprevistos (min):\n> 10\nDebe despertar a las: 6:30\n*** Ejecución Finalizada ***`, analysis: `<ul><li><strong>Entradas:</strong><ul><li>Hora de entrada al trabajo.</li><li>Tiempos de cada actividad (transporte, arreglo, etc.).</li></ul></li><li><strong>Salidas (Resultados):</strong><ul><li>Hora a la que se debe despertar.</li></ul></li></ul>`, result: `<ul><li><strong>Ejemplo:</strong> Entrar a las 8:00 AM, transporte 45 min, arreglo 20 min, etc.</li><li><strong>Resultado esperado:</strong> Despertar a las 6:30 AM.</li></ul>` },
+            { id: 4, title: "Elaborar Arroz con Pollo", enunciado: "Suponiendo que tengo habilidades en la elaboración de comida necesito elaborar un arroz con pollo para 5 personas.", pseudocode: `Algoritmo CalcularIngredientes\n    Definir numero_personas Como Entero\n    Definir arroz_gr, pollo_gr, verduras_gr Como Real\n\n    Escribir "Número de personas:"; Leer numero_personas\n\n    arroz_gr <- numero_personas * 100\n    pollo_gr <- numero_personas * 150\n    verduras_gr <- numero_personas * 50\n\n    Escribir "Lista de compras:"\n    Escribir "- Arroz:", arroz_gr, " gr"\n    Escribir "- Pollo:", pollo_gr, " gr"\n    Escribir "- Verduras:", verduras_gr, " gr"\nFinAlgoritmo`, diagram: `<div class="diagram-container"><img src="https://i.imgur.com/iITMHa2.png" alt="Diagrama de flujo para calcular ingredientes"></div>`, execution: `*** Ejecución Iniciada ***\nNúmero de personas:\n> 5\nLista de compras:\n- Arroz: 500 gr\n- Pollo: 750 gr\n- Verduras: 250 gr\n*** Ejecución Finalizada ***`, analysis: `<ul><li><strong>Entradas:</strong><ul><li>Cantidad de personas.</li><li>Receta base (proporciones por persona).</li></ul></li><li><strong>Salidas (Resultados):</strong><ul><li>Lista de ingredientes con cantidades ajustadas.</li></ul></li></ul>`, result: `<ul><li><strong>Para 5 personas, se necesita:</strong></li><li>Arroz: <strong>500 gr</strong></li><li>Pollo: <strong>750 gr</strong></li><li>Verduras: <strong>250 gr</strong></li></ul>` }
+        ];
+        
+        const exerciseList = document.getElementById('exercise-list');
+        const mainTitle = document.getElementById('main-title');
+        const enunciadoText = document.getElementById('enunciado-text');
+        const pseudocodeContent = document.getElementById('pseudocode-content');
+        const diagramContent = document.getElementById('diagram-content');
+        const executionContent = document.getElementById('execution-content');
+        const analysisContent = document.getElementById('analysis-content');
+        const resultContent = document.getElementById('result-content');
+        
+        function showExercise(id) {
+            const exercise = exercises.find(e => e.id === id);
+            if (!exercise) return;
+            mainTitle.textContent = `${exercise.id}. ${exercise.title}`;
+            enunciadoText.textContent = exercise.enunciado;
+            pseudocodeContent.innerHTML = `<pre><code>${exercise.pseudocode}</code></pre>`;
+            diagramContent.innerHTML = exercise.diagram;
+            executionContent.innerHTML = `<pre>${exercise.execution}</pre>`;
+            analysisContent.innerHTML = exercise.analysis;
+            resultContent.innerHTML = exercise.result;
+            document.querySelectorAll('#sidebar li').forEach(li => {
+                li.classList.remove('active');
+                if (parseInt(li.dataset.id) === id) {
+                    li.classList.add('active');
+                }
+            });
+        }
+        exercises.forEach(ex => {
+            const li = document.createElement('li');
+            li.textContent = `${ex.id}. ${ex.title}`;
+            li.dataset.id = ex.id;
+            li.onclick = () => showExercise(ex.id);
+            exerciseList.appendChild(li);
+        });
+        if (exercises.length > 0) {
+            showExercise(1);
+        }
+    </script>
+</body>
+</html>
